@@ -35,17 +35,19 @@ App::after(function($request, $response)
 
 Route::filter('auth', function()
 {
-	if (Auth::guest())
-	{
-		if (Request::ajax())
-		{
-			return Response::make('Unauthorized', 401);
-		}
-		else
-		{
-			return Redirect::guest('login');
-		}
-	}
+	// if (Auth::guest()) return Redirect::guest('login');
+	if( Session::get('usuario_id') == '' ) return Redirect::to('login');
+});
+
+// Permisos
+Route::filter('right', function()
+{
+	$componente = Request::segment(1);
+
+	if( Pagina::where('idPerfil', Session::get('usuario_perfil'))
+			->where('url', $componente)
+			->count() == 0 )
+		return Redirect::to('forbidden');
 });
 
 

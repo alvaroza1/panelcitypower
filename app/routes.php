@@ -11,6 +11,20 @@
 |
 */
 
-Route::get('/', function(){
-	return View::make('ejercicios.ejercicio2');
+Route::get('login','LoginController@index');
+Route::post('login','LoginController@login');
+
+
+Route::group(array('before' => 'auth'), function(){
+	
+	// Sin permisos
+	Route::get('forbidden', 'ForbiddenController@mostrar');
+	Route::get('/', 'IndexController@getIndex');
+	Route::get('logout','LoginController@logout');
+	Route::get('reportes','ReportesController@index');
+	Route::get('reportes/{lat}/{lng}','ReportesController@detalle');
+	Route::get('estadistica','ReportesController@estadistica');
+	Route::group(array('before' => 'right'), function(){
+
+	});
 });
